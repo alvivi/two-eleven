@@ -9,7 +9,16 @@ defmodule TwoEleven.Umbrella.MixProject do
       test_coverage: [tool: ExCoveralls],
       deps: deps(),
       aliases: aliases(),
-      preferred_cli_env: preferred_cli_env()
+      preferred_cli_env: preferred_cli_env(),
+
+      # Docs
+      name: "TwoEleven",
+      source_url: "https://github.com/alvivi/two-eleven",
+      homepage_url: "https:two-eleven.alvivi.dev",
+      docs: [
+        main: "readme",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -17,6 +26,7 @@ defmodule TwoEleven.Umbrella.MixProject do
     [
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.28", only: :dev, runtime: false},
       {:excoveralls, "~> 0.12", only: :test}
     ]
   end
