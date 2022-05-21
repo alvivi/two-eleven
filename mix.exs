@@ -27,7 +27,9 @@ defmodule TwoEleven.Umbrella.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.28", only: :dev, runtime: false},
-      {:excoveralls, "~> 0.12", only: :test}
+      {:excoveralls, "~> 0.12", only: :test},
+      # required to run "mix format" on ~H/.heex files from the umbrella root
+      {:phoenix_live_view, ">= 0.0.0"}
     ]
   end
 

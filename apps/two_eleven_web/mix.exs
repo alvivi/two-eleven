@@ -44,7 +44,7 @@ defmodule TwoElevenWeb.MixProject do
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_dashboard, "~> 0.6"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.17.5"},
+      {:phoenix_live_view, "~> 0.17.9"},
       {:plug_cowboy, "~> 2.5"},
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
