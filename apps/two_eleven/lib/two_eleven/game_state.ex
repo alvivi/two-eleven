@@ -250,6 +250,8 @@ defmodule TwoEleven.GameState do
   end
 
   @spec place_random_obstacles(t()) :: events()
+  defp place_random_obstacles(%GameState{obstacle_count: count}) when count <= 0, do: []
+
   defp place_random_obstacles(state) do
     {positions, updated_seed} =
       state.width
