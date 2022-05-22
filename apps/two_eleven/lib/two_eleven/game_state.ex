@@ -125,6 +125,8 @@ defmodule TwoEleven.GameState do
   @type event ::
           :lost
           | :won
+          | {:config_changed, width :: pos_integer(), height :: pos_integer(),
+             obstacle_count :: non_neg_integer()}
           | {:obstacle_placed, position :: vector()}
           | {:seed_updated, :rand.export_state()}
           | {:tile_merged, from :: vector(), to :: vector(), new_value :: pos_integer()}
@@ -165,13 +167,9 @@ defmodule TwoEleven.GameState do
 
   def execute(state, :start), do: execute(state, {:start, []})
 
-  def execute(_state, {:start, config}) do
-    %GameState{
-      height: Access.get(config, :height, @default_grid_height),
-      obstacle_count: Access.get(config, :obstacle_count, @default_obstacle_count),
-      seed: Access.get(config, :size) || :rand.seed(:default, 0),
-      width: Access.get(config, :width, @default_grid_width)
-    }
+  def execute(state, {:start, config}) do
+    state
+    |> run(&change_configuration(&1, config))
     |> run(&place_random_obstacles/1)
     |> run(&place_random_tile(&1, :init))
   end
@@ -191,6 +189,19 @@ defmodule TwoEleven.GameState do
   end
 
   # Commands - Actions
+
+  @spec change_configuration(t(), config) :: events()
+  defp change_configuration(_state, config) do
+    height = Access.get(config, :height, @default_grid_height)
+    obstacle_count = Access.get(config, :obstacle_count, @default_obstacle_count)
+    seed = Access.get(config, :size) || :rand.seed(:default, 0)
+    width = Access.get(config, :width, @default_grid_width)
+
+    [
+      {:config_changed, width, height, obstacle_count},
+      {:seed_updated, :rand.export_seed_s(seed)}
+    ]
+  end
 
   @spec check_lose_condition(t()) :: events()
   defp check_lose_condition(%GameState{lost?: true}), do: []
@@ -359,6 +370,9 @@ defmodule TwoEleven.GameState do
   @spec apply(t(), event()) :: t()
   defp apply(state, :lost), do: %GameState{state | lost?: true}
   defp apply(state, :won), do: %GameState{state | won?: true}
+
+  defp apply(state, {:config_changed, width, height, obstacle_count}),
+    do: %GameState{state | width: width, height: height, obstacle_count: obstacle_count}
 
   defp apply(state, {:obstacle_placed, position}),
     do: %GameState{state | tiles: Map.put_new(state.tiles, position, :obstacle)}
