@@ -85,7 +85,7 @@ defmodule TwoEleven.GameState do
           height: pos_integer(),
           lost?: boolean(),
           obstacle_count: non_neg_integer(),
-          seed: :rand.state(),
+          seed: :rand.state() | nil,
           tiles: map(),
           width: pos_integer(),
           won?: boolean()
@@ -154,6 +154,8 @@ defmodule TwoEleven.GameState do
   `t:event/0`.
   """
   @spec execute(t(), command() | [command()]) :: {t(), events()}
+  def execute(state \\ %GameState{}, commands)
+
   def execute(state, commands) when is_list(commands) do
     Enum.reduce(commands, {state, []}, fn cmd, {acc_state, acc_events} ->
       {updated_state, last_events} = execute(acc_state, cmd)
