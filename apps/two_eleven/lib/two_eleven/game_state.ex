@@ -369,20 +369,23 @@ defmodule TwoEleven.GameState do
   # State Mutators
   #
 
-  @spec apply(t(), event()) :: t()
-  defp apply(state, :lost), do: %GameState{state | lost?: true}
-  defp apply(state, :won), do: %GameState{state | won?: true}
+  @doc false
+  @spec apply(t(), event() | events()) :: t()
+  def apply(state, events) when is_list(events), do: Enum.reduce(events, state, &apply(&2, &1))
 
-  defp apply(state, {:config_changed, width, height, obstacle_count}),
+  def apply(state, :lost), do: %GameState{state | lost?: true}
+  def apply(state, :won), do: %GameState{state | won?: true}
+
+  def apply(state, {:config_changed, width, height, obstacle_count}),
     do: %GameState{state | width: width, height: height, obstacle_count: obstacle_count}
 
-  defp apply(state, {:obstacle_placed, position}),
+  def apply(state, {:obstacle_placed, position}),
     do: %GameState{state | tiles: Map.put_new(state.tiles, position, :obstacle)}
 
-  defp apply(state, {:seed_updated, exported_seed}),
+  def apply(state, {:seed_updated, exported_seed}),
     do: %GameState{state | seed: :rand.seed(exported_seed)}
 
-  defp apply(state, {:tile_merged, from, to, new_value}) do
+  def apply(state, {:tile_merged, from, to, new_value}) do
     updated_tiles =
       state.tiles
       |> Map.delete(from)
@@ -391,7 +394,7 @@ defmodule TwoEleven.GameState do
     %GameState{state | tiles: updated_tiles}
   end
 
-  defp apply(state, {:tile_moved, from, to}) do
+  def apply(state, {:tile_moved, from, to}) do
     updated_tiles =
       state.tiles
       |> Map.delete(from)
@@ -400,7 +403,7 @@ defmodule TwoEleven.GameState do
     %GameState{state | tiles: updated_tiles}
   end
 
-  defp apply(state, {:tile_placed, position, value}),
+  def apply(state, {:tile_placed, position, value}),
     do: %GameState{state | tiles: Map.put_new(state.tiles, position, {:tile, value})}
 
   #
