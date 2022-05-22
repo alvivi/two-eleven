@@ -8,11 +8,14 @@ defmodule TwoEleven.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the PubSub system
-      {Phoenix.PubSub, name: TwoEleven.PubSub}
-      # Start a worker by calling: TwoEleven.Worker.start_link(arg)
-      # {TwoEleven.Worker, arg}
+      {Phoenix.PubSub, name: TwoEleven.PubSub},
+      {Registry, keys: :unique, name: TwoEleven.Arenas.Registry},
+      {DynamicSupervisor,
+       strategy: :one_for_one, restart: :transient, name: TwoEleven.Arenas.Supervisor}
     ]
+
+    TwoEleven.Accounts.init()
+    TwoEleven.Arenas.init()
 
     Supervisor.start_link(children, strategy: :one_for_one, name: TwoEleven.Supervisor)
   end
