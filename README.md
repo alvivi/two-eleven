@@ -40,7 +40,7 @@ getting it running "should be" straightforward.
 ### Running with Docker
 
 If you have running [Docker](https://www.docker.com/), getting the project is a
-matter of build and running it:
+matter of building and running it:
 
 ```
 docker build . -t two-eleven
@@ -61,10 +61,10 @@ mix deps.get
 iex -S mix phx.server 
 ```
 
-If you don't have a compatible running elixir version, you can one of these
-methods to get one:
+If you don't have a compatible running elixir version, you can use one of these
+methods to get it:
 
-  * This project has a [.tool-versions](.tool-versions) file that specifies the
+  * This project has a [.tool-versions](.tool-versions) file that states the
     elixir version required by the project. Use [ASDF](https://asdf-vm.com/) to
     install it.
 
@@ -74,7 +74,7 @@ methods to get one:
 ## Improvements and Future Developments
 
 The purpose of this project was to be developed in one weekend, so some ideas,
-features and other improvements were left out. These are some of them:
+features and other improvements were leave out. These are some of them:
 
   * _Democracy_ and _anarchy_ game modes.
   * _CI_/_CD_ deployment pipelines using Github Actions.
