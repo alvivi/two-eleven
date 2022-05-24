@@ -8,17 +8,18 @@ defmodule TwoEleven.Accounts.Player do
   @typedoc "The player entity structure."
   @type t :: %Player{
           id: binary(),
+          emoji: String.t(),
           name: String.t(),
           token: binary()
         }
 
-  defstruct [:id, :name, :token]
+  defstruct [:id, :emoji, :name, :token]
 
   @doc false
   @spec dump(t()) :: tuple()
-  def dump(player), do: {player.id, player.name, player.token}
+  def dump(player), do: {player.id, player.emoji, player.name, player.token}
 
   @doc false
   @spec load(tuple()) :: t()
-  def load({id, name, token}), do: %Player{id: id, name: name, token: token}
+  def load({id, emoji, name, token}), do: %Player{id: id, emoji: emoji, name: name, token: token}
 end
