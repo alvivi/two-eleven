@@ -1,6 +1,8 @@
 defmodule TwoElevenWeb.Router do
   use TwoElevenWeb, :router
 
+  import TwoElevenWeb.Auth, only: [fetch_current_player: 2]
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -15,9 +17,11 @@ defmodule TwoElevenWeb.Router do
   end
 
   scope "/", TwoElevenWeb do
-    pipe_through :browser
+    pipe_through [:browser, :fetch_current_player]
 
-    live_session :default do
+    get "/", PageController, :index
+
+    live_session :default, on_mount: TwoElevenWeb.Auth do
       live "/games", GamesLive, :index
       live "/games/new", GamesLive, :new
       live "/games/:id", GamesLive, :show

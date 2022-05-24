@@ -22,6 +22,7 @@ defmodule TwoElevenWeb do
       use Phoenix.Controller, namespace: TwoElevenWeb
 
       import Plug.Conn
+
       alias TwoElevenWeb.Router.Helpers, as: Routes
     end
   end
@@ -46,6 +47,10 @@ defmodule TwoElevenWeb do
       use Phoenix.LiveView,
         layout: {TwoElevenWeb.LayoutView, "live.html"}
 
+      alias Phoenix.LiveView.{JS, Rendered, Socket}
+
+      alias TwoElevenWeb.UI
+
       unquote(view_helpers())
     end
   end
@@ -54,6 +59,11 @@ defmodule TwoElevenWeb do
     quote do
       use Phoenix.LiveComponent
 
+      alias Phoenix.LiveView.Rendered
+      alias Phoenix.LiveView.Socket
+
+      alias TwoElevenWeb.UI
+
       unquote(view_helpers())
     end
   end
@@ -61,6 +71,8 @@ defmodule TwoElevenWeb do
   def component do
     quote do
       use Phoenix.Component
+
+      alias Phoenix.LiveView.{JS, Rendered}
 
       unquote(view_helpers())
     end

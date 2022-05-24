@@ -1,3 +1,154 @@
-<div class="container">
-  <h1 class="bg-pink-500">Game index goes here</h1>
+<div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen">
+  <UI.header player={@player} />
+
+  <%= if @live_action == :index do %>
+    <main class="container mx-auto flex flex-col space-y-2 p-2">
+      <div class="flex justify-between">
+        <span class="text-2xl">Games Directory</span>
+        <UI.button action="patch" to={Routes.games_path(@socket, :new)} replace="true">
+          🚀 New Game!
+        </UI.button>
+      </div>
+
+      <div class="flex flex-col items-start w-max">
+        <h2 class="text-xl py-2">Your Previous Games</h2>
+        <ul class="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <%= for game  <- @player_games do %>
+            <li>
+              <.game_link game={game} path={Routes.games_path(@socket, :show, game.game_id)} />
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="flex flex-col items-start w-max">
+        <h2 class="text-xl py-2">Other Games Being Played!</h2>
+        <ul class="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <%= for game  <- @current_games do %>
+            <li>
+              <.game_link
+                game={game}
+                path={Routes.games_path(@socket, :show, game.game_id)}
+                show_owner="true"
+              />
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </main>
+  <% end %>
+
+  <%= if @live_action in [:new, :show] do %>
+    <%= if @live_action == :new do %>
+      <UI.modal id="new-modal" title="New Game" return_to={Routes.games_path(@socket, :index)}>
+        <.form
+          let={f}
+          for={:game}
+          phx-submit="start-new-game"
+          class="gap-2 grid grid-cols-2 items-center justify-items-end"
+        >
+          <%= label(f, :width, "Board Width: ") %>
+          <%= range_input(f, :width, min: 3, max: 8, value: @board_width, class: "input-range") %>
+
+          <%= label(f, :height, "Board Width: ") %>
+          <%= range_input(f, :height, min: 3, max: 8, value: @board_height, class: "input-range") %>
+
+          <%= label(f, :obstacles, "Obstacles: ") %>
+          <%= range_input(f, :obstacles,
+            min: 0,
+            max: 4,
+            value: @board_obstacles,
+            class: "input-range"
+          ) %>
+
+          <%= submit("Play!", class: "button col-start-2") %>
+        </.form>
+      </UI.modal>
+    <% end %>
+
+    <div class="flex flex-col grow max-h-full md:flex-row overflow-hidden">
+      <main class="flex items-center justify-center md:grow md:min-w-fit md:p-4 min-w-full p-2">
+        <div class="relative flex flex-col space-y-2 items-center">
+          <div
+            id="game-board"
+            phx-keyup="slide"
+            phx-hook="GameBoard"
+            data-board-width={@board_width}
+            data-board-height={@board_height}
+            phx-update="ignore"
+            tabindex="0"
+            class="bg-stone-400 dark:bg-stone-700 h-[min(98vw,40vh)] md:h-[min(98vw,60vh)] relative rounded-md"
+            style={"aspect-ratio: #{@board_width / @board_height}"}
+          >
+          </div>
+
+          <%= if not @moved? and not @lost? and not @just_won? do %>
+            <span phx-remove={JS.hide(transition: "motion-safe:animate-fade-out-scale")} }>
+              (Use <strong>arrow keys</strong> to move the tiles around)
+            </span>
+          <% end %>
+
+          <%= if @just_won? do %>
+            <div class="!m-0 absolute animate-fade-in bg-yellow-700/60 dark:bg-yellow-700/75 flex flex-col inset-0 items-center justify-center rounded-md">
+              <span class="font-bold text-2xl text-stone-200">
+                Game Won!
+              </span>
+              <span class="text-stone-300">
+                (You can continue playing using the arrows keys)
+              </span>
+            </div>
+          <% end %>
+
+          <%= if @lost? do %>
+            <div class="!m-0 absolute animate-fade-in bg-stone-900/60 dark:bg-stone-900/75 flex inset-0 items-center justify-center rounded-md">
+              <span class="font-bold text-2xl text-stone-200">
+                Game Lost!
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </main>
+
+      <aside class="bg-stone-100 dark:bg-stone-900 flex flex-col grow max-h-full md:grow-0 md:w-[max(20vw,300px)] overflow-hidden">
+        <span class="border-b-2 border-stone-200 dark:border-stone-800 grow-0 p-2 shrink-0 text-center text-stone-500 text-xl w-full">
+          Game Chat
+        </span>
+
+        <div class="grow overflow-y-auto p-2">
+          <div
+            id="message-list"
+            phx-update="append"
+            phx-hook="ChatMessageList"
+            class="flex flex-col space-y-1"
+          >
+            <%= for message <- @messages do %>
+              <div id={message.id} class="flex space-x-1">
+                <UI.player_tag
+                  hide_name="true"
+                  name={message.player_name}
+                  emoji={message.player_emoji}
+                  class="float-left inline-block self-start text-sm"
+                />
+                <span><%= message.text %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <.form
+          let={f}
+          for={:message}
+          phx-submit="send-message"
+          class="border-stone-200 border-t-2 dark:border-stone-800 p-2 shrink-0"
+        >
+          <%= text_input(f, :text,
+            class: "input",
+            placeholder: "Send a message...",
+            value: @message,
+            phx_blur: "message-input-blur"
+          ) %>
+        </.form>
+      </aside>
+    </div>
+  <% end %>
 </div>

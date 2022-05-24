@@ -2,4 +2,65 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+.button {
+  @apply inline-block outline-none px-4 py-2;
+  @apply border-2 border-stone-600 dark:border-stone-400 rounded-md;
+  @apply dark:focus:bg-orange-800 focus:bg-orange-300;
+  @apply dark:hover:bg-orange-800 hover:bg-orange-300;
+  @apply dark:hover:shadow-orange-800/50 hover:shadow-orange-300/50 hover:shadow-lg;
+  @apply transition-all;
+}
 
+.input {
+  @apply appearance-none outline-none p-2 w-full;
+  @apply bg-stone-200 dark:bg-stone-800 leading-tight;
+  @apply border-2 border-stone-300 dark:border-stone-700  rounded;
+  @apply focus:ring-0 focus:ring-offset-0;
+  @apply dark:focus:border-orange-800 focus:border-orange-400;
+}
+
+.input-range {
+  @apply rounded-lg appearance-none cursor-pointer;
+  @apply w-full h-2;
+  @apply bg-stone-400 dark:bg-stone-600;
+}
+
+.board-slot {
+  @apply absolute opacity-30 bg-stone-200 block dark:bg-stone-500 rounded;
+}
+
+.board-tile {
+  @apply animate-fade-in duration-75 transition-transform absolute bg-stone-200 block dark:bg-stone-500 flex justify-center rounded;
+}
+
+.board-tile-content {
+  @apply font-bold text-stone-600 dark:text-stone-300 inline-block self-center text-[min(5vw,3vh)];
+}
+
+.board-obstacle {
+  @apply absolute flex justify-center block rounded;
+
+  background-color: #bbb6b3;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    #a8a29e 10px,
+    #a8a29e 20px
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  .board-obstacle {
+    @apply absolute flex justify-center block rounded;
+
+    background-color: #534e4a;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      #44403c 10px,
+      #44403c 20px
+    );
+  }
+}
