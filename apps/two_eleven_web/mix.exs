@@ -18,9 +18,6 @@ defmodule TwoElevenWeb.MixProject do
     ]
   end
 
-  # Configuration for the OTP application.
-  #
-  # Type `mix help compile.app` for more information.
   def application do
     [
       mod: {TwoElevenWeb.Application, []},
@@ -28,13 +25,9 @@ defmodule TwoElevenWeb.MixProject do
     ]
   end
 
-  # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
-  # Specifies your project dependencies.
-  #
-  # Type `mix help deps` for examples and options.
   defp deps do
     [
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
@@ -53,12 +46,9 @@ defmodule TwoElevenWeb.MixProject do
     ]
   end
 
-  # Aliases are shortcuts or tasks specific to the current project.
-  #
-  # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get"],
+      setup: ["deps.get", "esbuild.install", "tailwind.install"],
       "assets.deploy": [
         "tailwind default --minify",
         "esbuild default --minify",

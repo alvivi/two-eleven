@@ -10,6 +10,7 @@ defmodule TwoEleven.Umbrella.MixProject do
       deps: deps(),
       aliases: aliases(),
       preferred_cli_env: preferred_cli_env(),
+      releases: releases(),
 
       # Docs
       name: "TwoEleven",
@@ -35,7 +36,8 @@ defmodule TwoEleven.Umbrella.MixProject do
 
   defp aliases do
     [
-      setup: ["cmd mix setup"]
+      setup: ["cmd mix setup"],
+      "assets.deploy": ["cmd mix assets.deploy"]
     ]
   end
 
@@ -44,6 +46,19 @@ defmodule TwoEleven.Umbrella.MixProject do
       "coveralls.github": :test,
       "coveralls.html": :test,
       coveralls: :test
+    ]
+  end
+
+  defp releases do
+    [
+      two_eleven: [
+        include_executables_for: [:unix],
+        applications: [
+          two_eleven: :permanent,
+          two_eleven_web: :permanent,
+          runtime_tools: :permanent
+        ]
+      ]
     ]
   end
 end
