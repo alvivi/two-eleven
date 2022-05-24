@@ -39,12 +39,31 @@ defmodule TwoEleven.Accounts do
   def new_player(retries) do
     player_id = Id.new()
     player_name = Id.to_name(player_id)
-    player = %Player{id: player_id, name: player_name, token: Id.new()}
+    player_emoji = Id.to_emoji(player_id)
+    player = %Player{id: player_id, emoji: player_emoji, name: player_name, token: Id.new()}
 
     case :ets.insert_new(__MODULE__, Player.dump(player)) do
       true -> {:ok, player}
       false -> new_player(retries - 1)
     end
+  end
+
+  @doc """
+  Returns public display information from a list of players.
+
+  Given a list of ids, this function returns the public display information for
+  each entry.
+  """
+  @spec get_display_info([binary()]) :: [map()]
+  def get_display_info(ids) do
+    ids
+    |> Stream.map(fn id ->
+      case :ets.lookup(__MODULE__, id) do
+        [payload] -> payload |> Player.load() |> Map.from_struct() |> Map.delete(:token)
+        _other -> nil
+      end
+    end)
+    |> Enum.reject(&is_nil/1)
   end
 
   @doc """
