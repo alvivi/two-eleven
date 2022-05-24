@@ -194,7 +194,7 @@ defmodule TwoEleven.GameState do
   defp change_configuration(_state, config) do
     height = Access.get(config, :height, @default_grid_height)
     obstacle_count = Access.get(config, :obstacle_count, @default_obstacle_count)
-    seed = Access.get(config, :size) || :rand.seed(:default, 0)
+    seed = Access.get(config, :seed) || :rand.seed(:default, 0)
     width = Access.get(config, :width, @default_grid_width)
 
     [
