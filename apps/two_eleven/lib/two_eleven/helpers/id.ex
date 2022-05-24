@@ -33,7 +33,19 @@ defmodule TwoEleven.Helpers.Id do
     frost voice paper frog smoke star hamster
   )
 
+  @emojis ~w(
+   🙈 🙉 🙊 💥 💫 💦 💨 🐵 🐒 🦍 🦧 🐶 🐕 🦮 🐕 🐩 🐺 🦊 🦝 🐱 🐈 🐈 🦁 🐯 🐅 🐆
+   🐴 🐎 🦄 🦓 🦌 🦬 🐮 🐂 🐃 🐄 🐷 🐖 🐗 🐽 🐏 🐑 🐐 🐪 🐫 🦙 🦒 🐘 🦣 🦏 🦛
+   🐭 🐁 🐀 🐹 🐰 🐇 🐿️ 🦫 🦔 🦇 🐻 🐻 🐨 🐼 🦥 🦦 🦨 🦘 🦡 🐾 🦃 🐔 🐓 🐣 🐤
+   🐥 🐦 🐧 🕊️ 🦅 🦆 🦢 🦉 🦤 🪶 🦩 🦚 🦜 🐸 🐊 🐢 🦎 🐍 🐲 🐉 🦕 🦖 🐳 🐋 🐬
+   🦭 🐟 🐠 🐡 🦈 🐙 🐚 🪸 🐌 🦋 🐛 🐜 🐝 🪲 🐞 🦗 🪳 🕷️ 🕸️ 🦂 🦟 🪰 🪱 🦠 💐 🌸
+   💮 🪷 🏵️ 🌹 🥀 🌺 🌻 🌼 🌷 🌱 🪴 🌲 🌳 🌴 🌵 🌾 🌿 ☘️ 🍀 🍁 🍂 🍃 🪹 🪺 🍄 🌰 🦀
+   🦞 🦐 🦑 🌍 🌎 🌏 🌐 🪨 🌑 🌒 🌓 🌔 🌕 🌖 🌗 🌘 🌙 🌚 🌛 🌜 ☀️ 🌝 🌞 ⭐ 🌟 🌠
+   ☁️ ⛅ ⛈️ 🌤️ 🌥️ 🌦️ 🌧️ 🌨️ 🌩️ 🌪️ 🌫️ 🌬️ 🌈 ☂️ ☔ ⚡ ❄️ ☃️ ⛄ ☄️ 🔥 💧 🌊 🎄 ✨ 🎋 🎍 🫧 
+  )
+
   @adjectives_length length(@adjectives)
+  @emojis_length length(@emojis)
   @nouns_length length(@nouns)
 
   @doc "Creates a slightly unique binary identifier."
@@ -50,6 +62,7 @@ defmodule TwoEleven.Helpers.Id do
   end
 
   @doc "Converts an id into non unique, adjective/noun string."
+  @spec to_name(binary()) :: String.t()
   def to_name(id) do
     case to_integer(id) do
       {:ok, integer} ->
@@ -61,6 +74,15 @@ defmodule TwoEleven.Helpers.Id do
 
       :error ->
         "inspiring-hacker"
+    end
+  end
+
+  @doc "Converts an id into non unique emoji."
+  @spec to_emoji(binary()) :: String.t()
+  def to_emoji(id) do
+    case to_integer(id) do
+      {:ok, integer} -> Enum.at(@emojis, rem(integer, @emojis_length))
+      :error -> "☠️"
     end
   end
 end
