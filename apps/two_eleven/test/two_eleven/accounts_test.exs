@@ -1,7 +1,7 @@
 defmodule TwoEleven.AccountsTest do
   use ExUnit.Case
 
-  alias TwoEleven.{Accounts, Accounts.Player}
+  alias TwoEleven.Accounts
 
   setup :reset_accounts_database
 
@@ -19,8 +19,7 @@ defmodule TwoEleven.AccountsTest do
   describe "fetch_player/2" do
     test "fetches a created player" do
       assert {:ok, player} = Accounts.new_player()
-      expected_player = %Player{id: player.id, name: player.name, token: player.token}
-      assert {:ok, expected_player} == Accounts.fetch_player(player.id, player.token)
+      assert {:ok, player} == Accounts.fetch_player(player.id, player.token)
     end
 
     test "returns an error if the user does not exists" do
