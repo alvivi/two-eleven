@@ -41,7 +41,7 @@ RUN mix setup \
 
 FROM alpine:$ALPINE_VERSION AS default
 
-EXPOSE 4000
+EXPOSE 8080
 
 WORKDIR /opt
 
