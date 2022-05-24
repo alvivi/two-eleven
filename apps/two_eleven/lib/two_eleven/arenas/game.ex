@@ -78,6 +78,18 @@ defmodule TwoEleven.Arenas.Game do
     {:reply, events, updated_state, state.timeout}
   end
 
+  def handle_call(:almost_won, _from, state) do
+    game_state = state.game_state
+
+    updated_game_state = %{
+      game_state
+      | tiles: %{{4, 0} => {:tile, 1024}, {4, 1} => {:tile, 1024}}
+    }
+
+    updated_state = %{state | game_state: updated_game_state}
+    {:reply, :yeah, updated_state}
+  end
+
   @spec get_name(binary()) :: tuple()
   defp get_name(id), do: {:via, Registry, {TwoEleven.Arenas.Registry, id}}
 
