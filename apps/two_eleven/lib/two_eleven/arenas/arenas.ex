@@ -43,8 +43,8 @@ defmodule TwoEleven.Arenas do
   end
 
   @doc "Returns a list of game currently being played."
-  @spec get_current_games_summary() :: list()
-  def get_current_games_summary() do
+  @spec get_current_games_summary :: list()
+  def get_current_games_summary do
     TwoEleven.Arenas.Supervisor
     |> DynamicSupervisor.which_children()
     |> Stream.map(&elem(&1, 1))

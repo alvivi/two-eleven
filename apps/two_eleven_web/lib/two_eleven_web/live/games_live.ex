@@ -268,10 +268,4 @@ defmodule TwoElevenWeb.GamesLive do
       _other -> default
     end
   end
-
-  @spec map_swap!(map(), Map.key(), Map.key()) :: map() | no_return()
-  defp map_swap!(map, from, to) do
-    {value, map} = Map.pop!(map, from)
-    Map.put(map, to, value)
-  end
 end
